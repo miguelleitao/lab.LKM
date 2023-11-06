@@ -11,6 +11,9 @@ MODULE_DESCRIPTION("A Simple Hello World module");
 static long int naluno = -1;
 static char *disc = "ARCOM";
 
+static char msg[120];
+static char* msgp;
+
 module_param(naluno, long, 0);
 module_param(disc, charp, 0);
 
@@ -22,7 +25,9 @@ int Major;
 static int device_open(struct inode *inode, struct file *file)
 {
   static int c = 0;
-  printk( "device open. c= %d\n", c++ );
+  printk( " c= %d\n", c++ );
+  //sprintf(msg, "mensagem %d criada pelo modulo.\n", c);
+  //msgp = msg;
   return 0;
 }
 static int device_close(struct inode *inode, struct file *file)
@@ -31,9 +36,37 @@ static int device_close(struct inode *inode, struct file *file)
  return 0;
 }
 
-static ssize_t device_read(struct file *f, char*buf, size_t len, loff_t *off) { return 0;}
+static ssize_t device_read(struct file *f, char *buf, size_t len, loff_t *off) 
+{ 
+    int bytes_read = 0;
+    
+    //if ( !msgp ) return 0;
 
-static ssize_t device_write(struct file *f, const char*buf, size_t len, loff_t *off) {return 0;}
+    while ( len && *msgp ) {
+	put_user( *(msgp++), buf++);
+	len--;
+	bytes_read++;
+    }
+
+    return bytes_read;
+}
+
+static ssize_t device_write(struct file *f, const char*buf, size_t len, loff_t *off) {
+
+    int bytes = 0;
+    char *dest = msg;
+    int max_size = 80;
+    printk("len=%lu, off=%lld\n", len, *off);
+    while( len>0 && max_size>0 ) {
+	get_user( *(dest++), buf++);
+	len--;
+	max_size--;
+	bytes++;
+    }
+    *dest = 0;
+    msgp = msg;
+    return bytes;
+}
 
 
 static struct file_operations fops = {
@@ -51,7 +84,8 @@ static int __init hello_init(void)
 
     Major = register_chrdev(0, "ARCOMdev", &fops);
     printk(KERN_INFO " O meu Major: %d\n", Major);
-
+    sprintf(msg, "mensagem  criada pelo modulo.\n" );
+    msgp = msg;
     return 0;    // Non-zero return means that the module couldn't be loaded.
 }
 
