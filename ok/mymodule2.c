@@ -22,7 +22,7 @@ int Major;
 static int device_open(struct inode *inode, struct file *file)
 {
   static int c = 0;
-  printk( " c= %d\n", c++ );
+  printk( "device open. c= %d\n", c++ );
   return 0;
 }
 static int device_close(struct inode *inode, struct file *file)
@@ -58,6 +58,8 @@ static int __init hello_init(void)
 static void __exit hello_cleanup(void)
 {
     printk(KERN_INFO "Cleaning up module.\n");
+    unregister_chrdev(Major, "ARCOMdev");
+
 }
 
 module_init(hello_init);
