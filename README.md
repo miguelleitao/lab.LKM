@@ -56,3 +56,23 @@ dmesg
 rmmod mymodule
 ```
 
+```
+cp ok/mymodule5.c mymodule.c
+make
+modinfo mymodule.ko
+insmod mymodule.ko
+ls mod |head
+dmesg
+rmmod mymodule
+```
+
+```
+cp ok/mymodule6.c mymodule.c
+make
+modinfo mymodule.ko
+insmod mymodule.ko
+ls mod |head
+dmesg
+rmmod mymodule
+```
+
