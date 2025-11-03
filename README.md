@@ -18,6 +18,7 @@ modinfo mymodule.ko
 insmod mymodule.ko
 lsmod |head
 dmesg
+cat /proc/arcom
 rmmod mymodule
 ```
 

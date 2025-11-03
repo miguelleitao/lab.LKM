@@ -15,7 +15,6 @@ static int hello_proc_open(struct inode *inode, struct  file *file) {
 }
 
 static const struct proc_ops hello_proc_fops = {
- // .owner = THIS_MODULE,
   .proc_open = hello_proc_open,
   .proc_read = seq_read,
   .proc_lseek = seq_lseek,
