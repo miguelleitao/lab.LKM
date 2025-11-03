@@ -84,7 +84,7 @@ static int __init hello_init(void)
 
     Major = register_chrdev(0, "ARCOMdev", &fops);
     printk(KERN_INFO " O meu Major: %d\n", Major);
-    sprintf(msg, "mensagem  criada pelo modulo.\n" );
+    sprintf(msg, "mensagem criada pelo modulo.\n" );
     msgp = msg;
     return 0;    // Non-zero return means that the module couldn't be loaded.
 }
@@ -93,7 +93,6 @@ static void __exit hello_cleanup(void)
 {
     printk(KERN_INFO "Cleaning up module.\n");
     unregister_chrdev(Major, "ARCOMdev");
-
 }
 
 module_init(hello_init);
