@@ -6,10 +6,10 @@
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("ARCOM teacher");
-MODULE_DESCRIPTION("A Simple Hello World module");
+MODULE_DESCRIPTION("A Simple char device driver. No reads, no writes.");
 
-static long int naluno = -1;
-static char *disc = "ARCOM";
+static long int naluno = 0;
+static char *disc = "ISEP";
 
 module_param(naluno, long, 0);
 module_param(disc, charp, 0);
@@ -22,7 +22,7 @@ int Major;
 static int device_open(struct inode *inode, struct file *file)
 {
   static int c = 0;
-  printk( "device open. c= %d\n", c++ );
+  printk( " counter=%d\n", c++ );
   return 0;
 }
 static int device_close(struct inode *inode, struct file *file)
@@ -46,7 +46,7 @@ static struct file_operations fops = {
 
 static int __init hello_init(void)
 {
-    printk(KERN_INFO "Hello world!\n");
+    printk(KERN_INFO "mymodule version 3 loaded!\n");
     printk(KERN_INFO "Modulo carregado pelo aluno %ld de %s\n",naluno,disc);
 
     Major = register_chrdev(0, "ARCOMdev", &fops);

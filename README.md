@@ -19,10 +19,6 @@ insmod mymodule.ko
 lsmod |head
 dmesg
 rmmod mymodule
-insmod mymodule.ko num_aluno=12345678 disc=arcom
-lsmod |head
-dmesg
-rmmod mymodule
 ```
 
 ```
@@ -30,6 +26,10 @@ cp ok/mymodule2.c mymodule.c
 make
 modinfo mymodule.ko
 insmod mymodule.ko
+lsmod |head
+dmesg
+rmmod mymodule
+insmod mymodule.ko num_aluno=12345678 disc=arcom
 lsmod |head
 dmesg
 rmmod mymodule

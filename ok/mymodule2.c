@@ -4,7 +4,7 @@
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("ARCOM teacher");
-MODULE_DESCRIPTION("A Simple Hello World module");
+MODULE_DESCRIPTION("A simple module with parameters.");
 
 static long int num_aluno = 0;
 static char *disc = "ISEP";
@@ -18,7 +18,7 @@ MODULE_PARM_DESC(disc, "O nome da disciplina");
 static int __init hello_init(void)
 {
     printk(KERN_INFO "Hello world!\n");
-    printk(KERN_INFO "Modulo compilado pelo aluno %ld de %s\n", num_aluno, disc);
+    printk(KERN_INFO "Modulo carregado pelo aluno %ld de %s\n", num_aluno, disc);
     return 0;    // Non-zero return means that the module couldn't be loaded.
 }
 
