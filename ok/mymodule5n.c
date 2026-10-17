@@ -27,7 +27,7 @@ static int device_close(struct inode *inode, struct file *file)
      return 0;
 }
 
-static ssize_t device_read(struct file *f, char *buf, size_t len, loff_t *off) 
+static ssize_t device_read(struct file *f, char __user *buf, size_t len, loff_t *off) 
 { 
     int bytes_read = 0;
     while ( len && *msgp ) {
@@ -41,7 +41,7 @@ static ssize_t device_read(struct file *f, char *buf, size_t len, loff_t *off)
     return bytes_read;
 }
 
-static ssize_t device_write(struct file *f, const char*buf, size_t len, loff_t *off) {
+static ssize_t device_write(struct file *f, const char __user *buf, size_t len, loff_t *off) {
 
     int bytes = 0;
     char *dest = msg;
