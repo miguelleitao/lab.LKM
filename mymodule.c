@@ -1,67 +1,68 @@
-#include <linux/module.h>    // included for all kernel modules
-#include <linux/kernel.h>    // included for KERN_INFO
-#include <linux/init.h>      // included for __init and __exit macros
+/*
+ *  mymodule6.c: Creates a kernel module with a timer 
+ */
+
+#include <linux/kernel.h>
+#include <linux/module.h>
 #include <linux/fs.h>
-#include <linux/uaccess.h>
+#include <linux/timer.h>
+
+#define SCAN_DELAY   		HZ/2
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("ARCOM teacher");
-MODULE_DESCRIPTION("A Simple char device driver. No reads, no writes.");
+MODULE_AUTHOR("Malta de ARCOM");
+MODULE_DESCRIPTION("Timer in kernel module example");
+MODULE_VERSION("v6.2.1");
 
-static long int naluno = 0;
-static char *disc = "ISEP";
+/*  
+ *  Prototypes
+ */
+int init_module(void);
+void cleanup_module(void);
 
-module_param(naluno, long, 0);
-module_param(disc, charp, 0);
+#define SUCCESS 0
 
-MODULE_PARM_DESC(naluno, "O numero do aluno");
-MODULE_PARM_DESC(disc, "A disciplina do aluno");
 
-int Major;
+/* 
+ * Global variables are declared as static, so are global within the file. 
+ */
+static struct timer_list my_timer;
 
-static int device_open(struct inode *inode, struct file *file)
+
+void my_timer_func(struct timer_list * ptr)
 {
-  static int c = 0;
-  printk( " counter=%d\n", c++ );
-  return 0;
-}
-static int device_close(struct inode *inode, struct file *file)
-{
- printk( "device closed.\n");
- return 0;
-}
-
-static ssize_t device_read(struct file *f, char __user *buf, size_t len, loff_t *off) { return 0;}
-
-static ssize_t device_write(struct file *f, const char __user *buf, size_t len, loff_t *off) {return 0;}
-
-
-static struct file_operations fops = {
-	.open = device_open,
-	.read = device_read,
-	.write = device_write,
-	.release = device_close
-};
-
-
-static int __init hello_init(void)
-{
-    printk(KERN_INFO "mymodule version 3 loaded!\n");
-    printk(KERN_INFO "Modulo carregado pelo aluno %ld de %s\n",naluno,disc);
-
-    Major = register_chrdev(0, "ARCOMdev", &fops);
-    printk(KERN_INFO " O meu Major: %d\n", Major);
-
-    return 0;    // Non-zero return means that the module couldn't be loaded.
+	static int counter;
+	printk(KERN_INFO "Timer func: %d\n", counter++);
+	mod_timer(&my_timer, jiffies + SCAN_DELAY);
 }
 
-static void __exit hello_cleanup(void)
-{
-    printk(KERN_INFO "Cleaning up module.\n");
-    unregister_chrdev(Major, "ARCOMdev");
 
+
+/*
+ * This function is called when the module is loaded
+ */
+int __init init_module(void)
+{
+ 	printk(KERN_INFO "Loading Timer module\n");
+
+	/*
+	 * Set up the timer for the first time
+	 */
+        timer_setup(&my_timer, my_timer_func, 0);
+        mod_timer(&my_timer, jiffies + SCAN_DELAY);
+
+	return SUCCESS;
 }
 
-module_init(hello_init);
-module_exit(hello_cleanup);
+/*
+ * This function is called when the module is unloaded
+ */
+void __exit cleanup_module(void)
+{
+	/* 
+	 * Unregister the timer 
+	 */
+	del_timer(&my_timer);
+	printk(KERN_INFO "Timer Module unloaded.\n");
+}
 
