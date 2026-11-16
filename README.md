@@ -29,10 +29,13 @@ modinfo mymodule.ko
 insmod mymodule.ko
 lsmod |head
 dmesg
+ls /sys/module/mymodule/parameters
 rmmod mymodule
-insmod mymodule.ko num_aluno=12345678 disc=arcom
+insmod mymodule.ko num_aluno=1234567 disc=arcop
 lsmod |head
 dmesg
+cat /sys/module/mymodule/parameters/disc
+cat /sys/module/mymodule/parameters/num_aluno
 rmmod mymodule
 ```
 
