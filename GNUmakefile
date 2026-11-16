@@ -28,3 +28,9 @@ push:
 	git commit -m update
 	git push
 
+README.html: README.md
+	pandoc $< -o $@
+
+README.pdf: README.html
+	wkhtmltopdf $< $@
+
