@@ -11,7 +11,7 @@ static char *disc = "ISEP";
 
 module_param(num_aluno, long, S_IRUSR);
 MODULE_PARM_DESC(num_aluno, "o numero do aluno");
-module_param(disc, charp, 0);
+module_param(disc, charp, S_IRUSR);
 MODULE_PARM_DESC(disc, "O nome da disciplina");
 
 
