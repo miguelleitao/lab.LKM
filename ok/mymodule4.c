@@ -2,7 +2,7 @@
 #include <linux/kernel.h>    // included for KERN_INFO
 #include <linux/init.h>      // included for __init and __exit macros
 #include <linux/fs.h>
-#include <asm/uaccess.h>
+#include <linux/uaccess.h>
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("ARCOM teacher");
@@ -27,7 +27,7 @@ static int device_close(struct inode *inode, struct file *file)
  return 0;
 }
 
-static ssize_t device_read(struct file *f, char *buf, size_t len, loff_t *off) 
+static ssize_t device_read(struct file *f, char __user *buf, size_t len, loff_t *off) 
 { 
     int bytes_read = 0;
     
