@@ -17,8 +17,8 @@ MODULE_VERSION("v6.2.1");
 /*  
  *  Prototypes
  */
-int init_module(void);
-void cleanup_module(void);
+//static int __init init_module(void);
+//static void __exit cleanup_module(void);
 
 #define SUCCESS 0
 
@@ -29,7 +29,7 @@ void cleanup_module(void);
 static struct timer_list my_timer;
 
 
-void my_timer_func(struct timer_list * ptr)
+static void my_timer_func(struct timer_list * ptr)
 {
 	static int counter;
 	printk(KERN_INFO "Timer func: %d\n", counter++);
@@ -41,7 +41,7 @@ void my_timer_func(struct timer_list * ptr)
 /*
  * This function is called when the module is loaded
  */
-int __init init_module(void)
+static int __init my_init(void)
 {
  	printk(KERN_INFO "Loading Timer module\n");
 
@@ -57,12 +57,15 @@ int __init init_module(void)
 /*
  * This function is called when the module is unloaded
  */
-void __exit cleanup_module(void)
+static void __exit my_exit(void)
 {
 	/* 
 	 * Unregister the timer 
 	 */
-	del_timer(&my_timer);
+	//del_timer(&my_timer);
+	timer_shutdown_sync(&my_timer);
 	printk(KERN_INFO "Timer Module unloaded.\n");
 }
 
+module_init(my_init);
+module_exit(my_exit);

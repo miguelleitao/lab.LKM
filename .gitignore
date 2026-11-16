@@ -53,3 +53,4 @@ dkms.conf
 old/
 proc/
 idiom/
+mymodule.c
